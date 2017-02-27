@@ -34,6 +34,38 @@ namespace Planner
       Assert.Equal(firstCity, secondCity);
     }
 
+    [Fact]
+    public void Test_Save_SavesCityToDatabase()
+    {
+      //Arrange
+      City testCity = new City("Miami");
+      testCity.Save();
+
+      //Act
+      List<City> result = City.GetAll();
+      List<City> testList = new List<City>{testCity};
+
+      //Assert
+      Assert.Equal(testList, result);
+    }
+
+    [Fact]
+    public void Test_Save_AssignsIdToCityObject()
+    {
+      //Arrange
+      City testCity = new City("Miami");
+      testCity.Save();
+
+      //Act
+      City savedCity = City.GetAll()[0];
+
+      int result = savedCity.GetId();
+      int testId = testCity.GetId();
+
+      //Assert
+      Assert.Equal(testId, result);
+    }
+
     public void Dispose()
     {
       // Flight.DeleteAll();
