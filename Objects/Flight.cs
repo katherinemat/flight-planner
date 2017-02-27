@@ -274,6 +274,70 @@ namespace Planner
       }
     }
 
+    public void UpdateStatus(string newStatus)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("UPDATE flights SET flight_status = @NewStatus OUTPUT INSERTED.flight_status WHERE id=@FlightId;", conn);
+
+      SqlParameter newStatusParameter = new SqlParameter("@NewStatus", newStatus);
+      cmd.Parameters.Add(newStatusParameter);
+
+      SqlParameter flightIdParameter = new SqlParameter("@FlightId", this.GetId());
+      cmd.Parameters.Add(flightIdParameter);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this._status = rdr.GetString(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+    public void UpdateDepartureCity(City newCity)
+    {
+      City OldDepartureCity = City.FindByName(this.GetDepartureCity());
+      int OldDepartureCityId = OldDepartureCity.GetId();
+
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("UPDATE flights SET departure_city = @DepartureCity OUTPUT INSERTED.departure_city WHERE id=@FlightId; UPDATE flights_cities SET city_id = @NewDepartureCityId WHERE flight_id = @FlightId AND city_id = @OldDepartureCityId;", conn);
+
+      SqlParameter departureCityParameter = new SqlParameter("@DepartureCity", newCity.GetName());
+      SqlParameter flightIdParameter = new SqlParameter("@FlightId", this.GetId());
+      SqlParameter oldDepartureCity = new SqlParameter("@OldDepartureCityId", OldDepartureCityId);
+      SqlParameter newDepartureCity = new SqlParameter("@NewDepartureCityId", newCity.GetId());
+      cmd.Parameters.Add(departureCityParameter);
+      cmd.Parameters.Add(flightIdParameter);
+      cmd.Parameters.Add(oldDepartureCity);
+      cmd.Parameters.Add(newDepartureCity);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this._departureCity = rdr.GetString(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
     public void Delete()
     {
       SqlConnection conn = DB.Connection();

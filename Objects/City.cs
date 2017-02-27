@@ -133,6 +133,39 @@ namespace Planner
       return foundCity;
     }
 
+    public static City FindByName(string cityName)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM cities WHERE name = @CityName;", conn);
+      SqlParameter nameParameter = new SqlParameter();
+      nameParameter.ParameterName = "@CityName";
+      nameParameter.Value = cityName;
+      cmd.Parameters.Add(nameParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      int foundCityId = 0;
+      string foundCityName = null;
+
+      while(rdr.Read())
+      {
+        foundCityId = rdr.GetInt32(0);
+        foundCityName = rdr.GetString(1);
+      }
+      City foundCity = new City(foundCityName, foundCityId);
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return foundCity;
+    }
+
     public List<Flight> GetFlightsByDepartureOrArrival(bool Arrival)
     {
       SqlConnection conn = DB.Connection();
