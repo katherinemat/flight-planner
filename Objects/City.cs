@@ -106,10 +106,10 @@ namespace Planner
       conn.Open();
 
       SqlCommand cmd = new SqlCommand("SELECT * FROM cities WHERE id = @CityId;", conn);
-      SqlParameter categoryIdParameter = new SqlParameter();
-      categoryIdParameter.ParameterName = "@CityId";
-      categoryIdParameter.Value = id.ToString();
-      cmd.Parameters.Add(categoryIdParameter);
+      SqlParameter flightIdParameter = new SqlParameter();
+      flightIdParameter.ParameterName = "@CityId";
+      flightIdParameter.Value = id.ToString();
+      cmd.Parameters.Add(flightIdParameter);
       SqlDataReader rdr = cmd.ExecuteReader();
 
       int foundCityId = 0;

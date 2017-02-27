@@ -82,7 +82,7 @@ namespace Planner
 
     public void Dispose()
     {
-      // Flight.DeleteAll();
+      Flight.DeleteAll();
       City.DeleteAll();
     }
   }

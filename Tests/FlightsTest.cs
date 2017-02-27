@@ -48,64 +48,64 @@ namespace Planner
         //Assert
         Assert.Equal(testList, result);
       }
-    //
+
+      [Fact]
+      public void Test_SaveAssignsIdToObject()
+      {
+        //Arrange
+        Flight testFlight = new Flight("12:00 pm", "Seattle", "Orange County", "Delayed");
+        testFlight.Save();
+
+        //Act
+        Flight savedFlight = Flight.GetAll()[0];
+
+        int result = savedFlight.GetId();
+        int testId = testFlight.GetId();
+
+        //Assert
+        Assert.Equal(testId, result);
+      }
+
+      [Fact]
+      public void Test_FindFindsFlightInDatabase()
+      {
+        //Arrange
+        Flight testFlight = new Flight("12:00 pm", "Seattle", "Orange County", "Delayed");
+        testFlight.Save();
+
+        //Act
+        Flight result = Flight.Find(testFlight.GetId());
+
+        //Assert
+        Assert.Equal(testFlight, result);
+      }
+
+      [Fact]
+      public void Test_AddCities_AddsCityToFlight()
+      {
+        //Arrange
+        City departureCity = new City("Chicago");
+        departureCity.Save();
+        City arrivalCity = new City("Seattle");
+        arrivalCity.Save();
+
+        Flight testFlight = new Flight("12:00 pm", departureCity.GetName(), arrivalCity.GetName(), "Delayed");
+        testFlight.Save();
+        testFlight.AddCities(arrivalCity, departureCity);
+
+        List<City> result = testFlight.GetCities();
+        List<City> testList = new List<City>{departureCity, arrivalCity};
+
+        //Assert
+        Assert.Equal(testList, result);
+      }
+
     //   [Fact]
-    //   public void Test_SaveAssignsIdToObject()
+    //   public void Test_GetCategories_ReturnsAllFlightCategories()
     //   {
     //     //Arrange
-    //     Task testTask = new Task("Mow the lawn");
-    //     testTask.Save();
-    //
-    //     //Act
-    //     Task savedTask = Task.GetAll()[0];
-    //
-    //     int result = savedTask.GetId();
-    //     int testId = testTask.GetId();
-    //
-    //     //Assert
-    //     Assert.Equal(testId, result);
-    //   }
-    //
-    //   [Fact]
-    //   public void Test_FindFindsTaskInDatabase()
-    //   {
-    //     //Arrange
-    //     Task testTask = new Task("Mow the lawn");
-    //     testTask.Save();
-    //
-    //     //Act
-    //     Task result = Task.Find(testTask.GetId());
-    //
-    //     //Assert
-    //     Assert.Equal(testTask, result);
-    //   }
-    //
-    //   [Fact]
-    //   public void Test_AddCategory_AddsCategoryToTask()
-    //   {
-    //     //Arrange
-    //     Task testTask = new Task("Mow the lawn");
-    //     testTask.Save();
-    //
-    //     Category testCategory = new Category("Home stuff");
-    //     testCategory.Save();
-    //
-    //     //Act
-    //     testTask.AddCategory(testCategory);
-    //
-    //     List<Category> result = testTask.GetCategories();
-    //     List<Category> testList = new List<Category>{testCategory};
-    //
-    //     //Assert
-    //     Assert.Equal(testList, result);
-    //   }
-    //
-    //   [Fact]
-    //   public void Test_GetCategories_ReturnsAllTaskCategories()
-    //   {
-    //     //Arrange
-    //     Task testTask = new Task("Mow the lawn");
-    //     testTask.Save();
+    //     Flight testFlight = new Flight("Mow the lawn");
+    //     testFlight.Save();
     //
     //     Category testCategory1 = new Category("Home stuff");
     //     testCategory1.Save();
@@ -114,8 +114,8 @@ namespace Planner
     //     testCategory2.Save();
     //
     //     //Act
-    //     testTask.AddCategory(testCategory1);
-    //     List<Category> result = testTask.GetCategories();
+    //     testFlight.AddCategory(testCategory1);
+    //     List<Category> result = testFlight.GetCategories();
     //     List<Category> testList = new List<Category> {testCategory1};
     //
     //     //Assert
@@ -123,31 +123,31 @@ namespace Planner
     //   }
     //
     //   [Fact]
-    // public void Test_Delete_DeletesTaskAssociationsFromDatabase()
+    // public void Test_Delete_DeletesFlightAssociationsFromDatabase()
     // {
     //   //Arrange
     //   Category testCategory = new Category("Home stuff");
     //   testCategory.Save();
     //
     //   string testDescription = "Mow the lawn";
-    //   Task testTask = new Task(testDescription);
-    //   testTask.Save();
+    //   Flight testFlight = new Flight(testDescription);
+    //   testFlight.Save();
     //
     //   //Act
-    //   testTask.AddCategory(testCategory);
-    //   testTask.Delete();
+    //   testFlight.AddCategory(testCategory);
+    //   testFlight.Delete();
     //
-    //   List<Task> resultCategoryTasks = testCategory.GetTasks();
-    //   List<Task> testCategoryTasks = new List<Task> {};
+    //   List<Flight> resultCategoryFlights = testCategory.GetFlights();
+    //   List<Flight> testCategoryFlights = new List<Flight> {};
     //
     //   //Assert
-    //   Assert.Equal(testCategoryTasks, resultCategoryTasks);
+    //   Assert.Equal(testCategoryFlights, resultCategoryFlights);
     // }
 
       public void Dispose()
       {
         Flight.DeleteAll();
-        // Category.DeleteAll();
+        City.DeleteAll();
       }
   }
 }
