@@ -1,0 +1,52 @@
+@{
+    Layout="Shared/_Layout.cshtml";
+}
+
+<h2>Add new flight</h2>
+<div class="row">
+
+  <form class="col s12" action="/flights/new" method="post" id="new-flight">
+    <div class="input-field col s12">
+
+      <input type="date" name="departure" id="departure" class="datepicker">
+      <label for="departure">Departure Time</label>
+    </div>
+
+    <div class="input-field col s12">
+      <select name="departure-city">
+        <option value="0"></option>
+        @foreach (var city in @Model)
+        {
+          <option value="@city.GetId()">@city.GetName()</option>
+        }
+      </select>
+      <label for="departure-city">Departure City</label>
+    </div>
+
+    <div class="input-field col s12">
+      <select name="arrival-city">
+        <option value="0"></option>
+        @foreach (var city in @Model)
+        {
+          <option value="@city.GetId()">@city.GetName()</option>
+        }
+      </select>
+      <label for="arrival-city">Arrival City</label>
+    </div>
+
+    <div class="input-field col s12">
+      <select name="status">
+        <option>"On time"</option>
+        <option>"Delayed"</option>
+        <option>"Cancelled"</option>
+        <option>"Complete"</option>
+      </select>
+      <label for="status">Flight Status</label>
+    </div>
+
+    <button type="submit" name="button" class="btn btn-lg btn-info">Submit</button>
+  </form>
+</div>
+
+
+<a href="/">home</a>
