@@ -66,6 +66,20 @@ namespace Planner
       Assert.Equal(testId, result);
     }
 
+    [Fact]
+    public void Test_Find_FindsCityInDatabase()
+    {
+      //Arrange
+      City testCity = new City("Chicago");
+      testCity.Save();
+
+      //Act
+      City foundCity = City.Find(testCity.GetId());
+
+      //Assert
+      Assert.Equal(testCity, foundCity);
+    }
+
     public void Dispose()
     {
       // Flight.DeleteAll();

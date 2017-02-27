@@ -100,6 +100,39 @@ namespace Planner
       }
     }
 
+    public static City Find(int id)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM cities WHERE id = @CityId;", conn);
+      SqlParameter categoryIdParameter = new SqlParameter();
+      categoryIdParameter.ParameterName = "@CityId";
+      categoryIdParameter.Value = id.ToString();
+      cmd.Parameters.Add(categoryIdParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      int foundCityId = 0;
+      string foundCityName = null;
+
+      while(rdr.Read())
+      {
+        foundCityId = rdr.GetInt32(0);
+        foundCityName = rdr.GetString(1);
+      }
+      City foundCity = new City(foundCityName, foundCityId);
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return foundCity;
+    }
+
     public static void DeleteAll()
     {
       SqlConnection conn = DB.Connection();
