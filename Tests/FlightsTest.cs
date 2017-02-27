@@ -127,6 +127,24 @@ namespace Planner
         Assert.Equal(returnedFlights, expected);
       }
 
+      [Fact]
+      public void UpdateDeparture_OneFlight_NewDeparture()
+      {
+        City city1 = new City("Barcelona");
+        city1.Save();
+        City city2 = new City("Honolulu");
+        city2.Save();
+        Flight flight1 = new Flight("12:00 pm", city1.GetName(), city2.GetName(), "Delayed");
+        flight1.Save();
+        flight1.AddCities(city1, city2);
+
+        flight1.UpdateDeparture("12:00 am");
+
+        string newDeparture = flight1.GetDeparture();
+
+        Assert.Equal(newDeparture, "12:00 am");
+      }
+
       public void Dispose()
       {
         Flight.DeleteAll();

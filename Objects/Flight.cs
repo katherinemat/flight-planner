@@ -245,6 +245,35 @@ namespace Planner
       return cities;
     }
 
+    public void UpdateDeparture(string newDeparture)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("UPDATE flights SET departure = @NewDeparture OUTPUT INSERTED.departure WHERE id=@FlightId;", conn);
+
+      SqlParameter newDepartureParameter = new SqlParameter("@NewDeparture", newDeparture);
+      cmd.Parameters.Add(newDepartureParameter);
+
+      SqlParameter clientIdParameter = new SqlParameter("@FlightId", this.GetId());
+      cmd.Parameters.Add(clientIdParameter);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this._departure = rdr.GetString(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
     public void Delete()
     {
       SqlConnection conn = DB.Connection();
