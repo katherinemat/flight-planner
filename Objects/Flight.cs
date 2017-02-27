@@ -95,6 +95,41 @@ namespace Planner
       return allFlights;
     }
 
+    public void Save()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO flights (departure, departure_city, arrival_city, flight_status) OUTPUT INSERTED.id VALUES (@Departure, @DepartureCity, @ArrivalCity, @Status);", conn);
+
+      SqlParameter departureParameter = new SqlParameter("@Departure", this.GetDeparture());
+      cmd.Parameters.Add(departureParameter);
+
+      SqlParameter departureCityParameter = new SqlParameter("@DepartureCity", this.GetDepartureCity());
+      cmd.Parameters.Add(departureCityParameter);
+
+      SqlParameter arrivalCityParameter = new SqlParameter("@ArrivalCity", this.GetArrivalCity());
+      cmd.Parameters.Add(arrivalCityParameter);
+
+      SqlParameter statusParameter = new SqlParameter("@Status", this.GetStatus());
+      cmd.Parameters.Add(statusParameter);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this._id = rdr.GetInt32(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if(conn != null)
+      {
+        conn.Close();
+      }
+    }
+
     public static void DeleteAll()
     {
       SqlConnection conn = DB.Connection();

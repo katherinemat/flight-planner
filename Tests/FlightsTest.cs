@@ -34,20 +34,20 @@ namespace Planner
         Assert.Equal(firstFlight, secondFlight);
       }
 
-    //   [Fact]
-    //   public void Test_Save()
-    //   {
-    //     //Arrange
-    //     Task testTask = new Task("Mow the lawn");
-    //     testTask.Save();
-    //
-    //     //Act
-    //     List<Task> result = Task.GetAll();
-    //     List<Task> testList = new List<Task>{testTask};
-    //
-    //     //Assert
-    //     Assert.Equal(testList, result);
-    //   }
+      [Fact]
+      public void Test_Save()
+      {
+        //Arrange
+        Flight testFlight = new Flight("12:00 pm", "Seattle", "Orange County", "Delayed");
+        testFlight.Save();
+
+        //Act
+        List<Flight> result = Flight.GetAll();
+        List<Flight> testList = new List<Flight>{testFlight};
+
+        //Assert
+        Assert.Equal(testList, result);
+      }
     //
     //   [Fact]
     //   public void Test_SaveAssignsIdToObject()
