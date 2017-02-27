@@ -100,49 +100,32 @@ namespace Planner
         Assert.Equal(testList, result);
       }
 
-    //   [Fact]
-    //   public void Test_GetCategories_ReturnsAllFlightCategories()
-    //   {
-    //     //Arrange
-    //     Flight testFlight = new Flight("Mow the lawn");
-    //     testFlight.Save();
-    //
-    //     Category testCategory1 = new Category("Home stuff");
-    //     testCategory1.Save();
-    //
-    //     Category testCategory2 = new Category("Work stuff");
-    //     testCategory2.Save();
-    //
-    //     //Act
-    //     testFlight.AddCategory(testCategory1);
-    //     List<Category> result = testFlight.GetCategories();
-    //     List<Category> testList = new List<Category> {testCategory1};
-    //
-    //     //Assert
-    //     Assert.Equal(testList, result);
-    //   }
-    //
-    //   [Fact]
-    // public void Test_Delete_DeletesFlightAssociationsFromDatabase()
-    // {
-    //   //Arrange
-    //   Category testCategory = new Category("Home stuff");
-    //   testCategory.Save();
-    //
-    //   string testDescription = "Mow the lawn";
-    //   Flight testFlight = new Flight(testDescription);
-    //   testFlight.Save();
-    //
-    //   //Act
-    //   testFlight.AddCategory(testCategory);
-    //   testFlight.Delete();
-    //
-    //   List<Flight> resultCategoryFlights = testCategory.GetFlights();
-    //   List<Flight> testCategoryFlights = new List<Flight> {};
-    //
-    //   //Assert
-    //   Assert.Equal(testCategoryFlights, resultCategoryFlights);
-    // }
+      [Fact]
+      public void Delete_AllFlights_AllButOneFlight()
+      {
+        City city1 = new City("Barcelona");
+        city1.Save();
+        City city2 = new City("Honolulu");
+        city2.Save();
+        Flight flight1 = new Flight("12:00 pm", city1.GetName(), city2.GetName(), "Delayed");
+        flight1.Save();
+        flight1.AddCities(city1, city2);
+
+        City city3 = new City("Barcelona");
+        city3.Save();
+        City city4 = new City("Honolulu");
+        city4.Save();
+        Flight flight2 = new Flight("14:00 pm", city3.GetName(), city4.GetName(), "Delayed");
+        flight2.Save();
+        flight2.AddCities(city3, city4);
+
+        flight1.Delete();
+
+        List<Flight> returnedFlights = Flight.GetAll();
+        List<Flight> expected = new List<Flight>{flight2};
+
+        Assert.Equal(returnedFlights, expected);
+      }
 
       public void Dispose()
       {

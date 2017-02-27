@@ -245,6 +245,23 @@ namespace Planner
       return cities;
     }
 
+    public void Delete()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM flights WHERE id = @FlightId; DELETE FROM flights_cities WHERE flight_id = @FlightId;", conn);
+      SqlParameter flightIdParameter = new SqlParameter("@FlightId", this.GetId());
+
+      cmd.Parameters.Add(flightIdParameter);
+      cmd.ExecuteNonQuery();
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
     public static void DeleteAll()
     {
       SqlConnection conn = DB.Connection();
