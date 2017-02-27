@@ -133,7 +133,7 @@ namespace Planner
       return foundCity;
     }
 
-    public List<Flight> GetFlights()
+    public List<Flight> GetFlightsByDepartureOrArrival(bool Arrival)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
@@ -159,27 +159,63 @@ namespace Planner
 
       List<Flight> flights = new List<Flight>{};
 
-      foreach(int flightId in flightIds)
+      if (!Arrival)
       {
-        SqlCommand flightQuery = new SqlCommand("SELECT * FROM flights WHERE id = @FlightId;", conn);
 
-        SqlParameter flightIdParameter = new SqlParameter("@FlightId", flightId);
-        flightQuery.Parameters.Add(flightIdParameter);
-
-        SqlDataReader queryReader = flightQuery.ExecuteReader();
-        while(queryReader.Read())
+        foreach(int flightId in flightIds)
         {
-          int thisFlightId = queryReader.GetInt32(0);
-          string thisDeparture = queryReader.GetString(1);
-          string thisDepartureCity = queryReader.GetString(2);
-          string thisArrivalCity = queryReader.GetString(3);
-          string thisStatus = queryReader.GetString(4);
-          Flight thisFlight = new Flight(thisDeparture, thisDepartureCity, thisArrivalCity, thisStatus, thisFlightId);
-          flights.Add(thisFlight);
+          SqlCommand flightQuery = new SqlCommand("SELECT * FROM flights WHERE id = @FlightId and departure_city = @CityName;", conn);
+
+          SqlParameter flightIdParameter = new SqlParameter("@FlightId", flightId);
+          flightQuery.Parameters.Add(flightIdParameter);
+
+          SqlParameter cityNameParameter = new SqlParameter("@CityName", this.GetName());
+          flightQuery.Parameters.Add(cityNameParameter);
+
+          SqlDataReader queryReader = flightQuery.ExecuteReader();
+          while(queryReader.Read())
+          {
+            int thisFlightId = queryReader.GetInt32(0);
+            string thisDeparture = queryReader.GetString(1);
+            string thisDepartureCity = queryReader.GetString(2);
+            string thisArrivalCity = queryReader.GetString(3);
+            string thisStatus = queryReader.GetString(4);
+            Flight thisFlight = new Flight(thisDeparture, thisDepartureCity, thisArrivalCity, thisStatus, thisFlightId);
+            flights.Add(thisFlight);
+          }
+          if(queryReader != null)
+          {
+            queryReader.Close();
+          }
         }
-        if(queryReader != null)
+      }
+      else
+      {
+        foreach(int flightId in flightIds)
         {
-          queryReader.Close();
+          SqlCommand flightQuery = new SqlCommand("SELECT * FROM flights WHERE id = @FlightId and arrival_city = @CityName;", conn);
+
+          SqlParameter flightIdParameter = new SqlParameter("@FlightId", flightId);
+          flightQuery.Parameters.Add(flightIdParameter);
+
+          SqlParameter cityNameParameter = new SqlParameter("@CityName", this.GetName());
+          flightQuery.Parameters.Add(cityNameParameter);
+
+          SqlDataReader queryReader = flightQuery.ExecuteReader();
+          while(queryReader.Read())
+          {
+            int thisFlightId = queryReader.GetInt32(0);
+            string thisDeparture = queryReader.GetString(1);
+            string thisDepartureCity = queryReader.GetString(2);
+            string thisArrivalCity = queryReader.GetString(3);
+            string thisStatus = queryReader.GetString(4);
+            Flight thisFlight = new Flight(thisDeparture, thisDepartureCity, thisArrivalCity, thisStatus, thisFlightId);
+            flights.Add(thisFlight);
+          }
+          if(queryReader != null)
+          {
+            queryReader.Close();
+          }
         }
       }
       if(conn != null)
