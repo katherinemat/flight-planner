@@ -80,6 +80,29 @@ namespace Planner
       Assert.Equal(testCity, foundCity);
     }
 
+    [Fact]
+    public void GetFlights_GetFlightsByCity_ConnectedFlights()
+    {
+      City city1 = new City("Seattle");
+      city1.Save();
+      City city2 = new City("Chicago");
+      city2.Save();
+      City city3 = new City("Orange County");
+      city3.Save();
+
+      Flight flight1 = new Flight("12:00 pm", "Seattle", "Orange County", "Delayed");
+      flight1.Save();
+      flight1.AddCities(city1, city3);
+      Flight flight2 = new Flight("2am", "Chicago", "Seattle", "On-time");
+      flight2.Save();
+      flight2.AddCities(city2, city1);
+
+      List<Flight> expected = new List<Flight>{flight1, flight2};
+      List<Flight> returnedFlights = city1.GetFlights();
+
+      Assert.Equal(expected, returnedFlights);
+    }
+
     public void Dispose()
     {
       Flight.DeleteAll();

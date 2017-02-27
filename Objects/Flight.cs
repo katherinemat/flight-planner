@@ -169,7 +169,7 @@ namespace Planner
       return foundFlight;
     }
 
-    public void AddCities(City arrivalCity, City departureCity)
+    public void AddCities(City departureCity, City arrivalCity)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();

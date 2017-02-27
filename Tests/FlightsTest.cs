@@ -91,7 +91,7 @@ namespace Planner
 
         Flight testFlight = new Flight("12:00 pm", departureCity.GetName(), arrivalCity.GetName(), "Delayed");
         testFlight.Save();
-        testFlight.AddCities(arrivalCity, departureCity);
+        testFlight.AddCities(departureCity, arrivalCity);
 
         List<City> result = testFlight.GetCities();
         List<City> testList = new List<City>{departureCity, arrivalCity};
