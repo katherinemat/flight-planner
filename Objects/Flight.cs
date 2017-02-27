@@ -338,6 +338,41 @@ namespace Planner
       }
     }
 
+    public void UpdateArrivalCity(City newCity)
+    {
+      City OldArrivalCity = City.FindByName(this.GetArrivalCity());
+      int OldArrivalCityId = OldArrivalCity.GetId();
+
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("UPDATE flights SET arrival_city = @ArrivalCity OUTPUT INSERTED.arrival_city WHERE id=@FlightId; UPDATE flights_cities SET city_id = @NewArrivalCityId WHERE flight_id = @FlightId AND city_id = @OldArrivalCityId;", conn);
+
+      SqlParameter arrivalCityParameter = new SqlParameter("@ArrivalCity", newCity.GetName());
+      SqlParameter flightIdParameter = new SqlParameter("@FlightId", this.GetId());
+      SqlParameter oldArrivalCity = new SqlParameter("@OldArrivalCityId", OldArrivalCityId);
+      SqlParameter newArrivalCity = new SqlParameter("@NewArrivalCityId", newCity.GetId());
+      cmd.Parameters.Add(arrivalCityParameter);
+      cmd.Parameters.Add(flightIdParameter);
+      cmd.Parameters.Add(oldArrivalCity);
+      cmd.Parameters.Add(newArrivalCity);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this._arrivalCity = rdr.GetString(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
     public void Delete()
     {
       SqlConnection conn = DB.Connection();

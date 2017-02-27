@@ -184,6 +184,27 @@ namespace Planner
         Assert.Equal(newDepartureCity, city3.GetName());
       }
 
+      [Fact]
+      public void UpdateArrivalCity_OneFlight_NewArrivalCity()
+      {
+        City city1 = new City("Barcelona");
+        city1.Save();
+        City city2 = new City("Honolulu");
+        city2.Save();
+        Flight flight1 = new Flight("12:00 pm", city1.GetName(), city2.GetName(), "Delayed");
+        flight1.Save();
+        flight1.AddCities(city1, city2);
+
+        City city3 = new City("Austin");
+        city3.Save();
+
+        flight1.UpdateArrivalCity(city3);
+
+        string newArrivalCity = flight1.GetArrivalCity();
+
+        Assert.Equal(newArrivalCity, city3.GetName());
+      }
+
       public void Dispose()
       {
         Flight.DeleteAll();
