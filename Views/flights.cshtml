@@ -1,0 +1,12 @@
+@{
+    Layout="Shared/_Layout.cshtml";
+}
+<div class="row">
+  @foreach(var flight in @Model)
+  {
+    <p>@flight.GetDeparture()</p>
+    <p>@flight.GetDepartureCity()</p>
+    <p>@flight.GetArrivalCity()</p>
+    <p>@flight.GetStatus()</p>
+  }
+</div>

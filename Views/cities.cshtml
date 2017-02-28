@@ -1,0 +1,25 @@
+@{
+    Layout="Shared/_Layout.cshtml";
+}
+
+<h2>Add new city</h2>
+<div class="row">
+
+  <form class="col s12" action="/cities" method="post" id="new-city">
+    <div class="input-field col s12">
+
+      <input type="text" name="name" id="name">
+      <label for="name">City Name</label>
+    </div>
+
+    <button type="submit" name="button" class="btn btn-lg btn-info">Submit</button>
+  </form>
+</div>
+
+
+<div class="row">
+  @foreach(var city in @Model)
+  {
+    <p>@city.GetName()</p>
+  }
+</div>
